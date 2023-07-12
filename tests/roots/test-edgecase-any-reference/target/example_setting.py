@@ -1,4 +1,5 @@
-from pydantic import BaseSettings, validator, Field
+from pydantic import field_validator, Field, ConfigDict
+from pydantic_settings import BaseSettings
 
 
 class ExampleSettings(BaseSettings):
@@ -20,7 +21,8 @@ class ExampleSettings(BaseSettings):
         description="Shows constraints within doc string."
     )
 
-    @validator("field_with_validator_and_alias", "field_plain_with_validator")
+    @field_validator("field_with_validator_and_alias",
+                     "field_plain_with_validator")
     def check_max_length_ten(cls, v):
         """Show corresponding field with link/anchor.
 
@@ -29,6 +31,5 @@ class ExampleSettings(BaseSettings):
         if not len(v) < 10:
             raise ValueError("No more than 10 characters allowed")
 
-    class Config:
-        env_prefix = "foo_"
-        allow_mutation = True
+    model_config = ConfigDict(frozen=False)
+    # DEBUG - env_prefix = "foo_"

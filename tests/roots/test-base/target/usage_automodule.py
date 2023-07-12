@@ -1,7 +1,8 @@
-from pydantic import BaseSettings, validator, Field
+from pydantic import field_validator, Field, ConfigDict
+from pydantic_settings import BaseSettings
 
 
-class AutoModuleSettings(BaseSettings):
+class ExampleSettings(BaseSettings):
     """Document your project settings very conveniently. Applies like wise
     to pydantic models.
 
@@ -25,7 +26,8 @@ class AutoModuleSettings(BaseSettings):
         description="Shows constraints within doc string."
     )
 
-    @validator("field_with_validator_and_alias", "field_plain_with_validator")
+    @field_validator("field_with_validator_and_alias",
+                     "field_plain_with_validator")
     def check_max_length_ten(cls, v):
         """Show corresponding field with link/anchor.
 
@@ -36,6 +38,5 @@ class AutoModuleSettings(BaseSettings):
 
         return v
 
-    class Config:
-        env_prefix = "foo_"
-        allow_mutation = True
+    model_config = ConfigDict(frozen=False)
+    # DEBUG - env_prefix = "foo_"

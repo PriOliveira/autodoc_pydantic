@@ -1,6 +1,7 @@
 from typing import Optional
 
-from pydantic import BaseModel, validator, Field, BaseSettings, root_validator
+from pydantic import BaseModel, field_validator, Field, model_validator
+from pydantic_settings import BaseSettings
 
 
 class ModelShowJson(BaseModel):
@@ -20,7 +21,7 @@ class ModelShowValidatorsSummary(BaseModel):
 
     field: int = 1
 
-    @validator("field")
+    @field_validator("field")
     def check(cls, v) -> str:
         return v
 
@@ -28,7 +29,7 @@ class ModelShowValidatorsSummary(BaseModel):
 class ModelShowValidatorsSummaryInherited(ModelShowValidatorsSummary):
     """ModelShowValidatorsSummaryInherited."""
 
-    @validator("field")
+    @field_validator("field")
     def check_inherited(cls, v) -> str:
         return v
 
@@ -40,10 +41,9 @@ class ModelShowValidatorsSummaryMultipleFields(BaseModel):
 
     field2: int = 2
 
-    @validator("field1", "field2")
+    @field_validator("field1", "field2")
     def check(cls, v) -> str:
         return v
-
 
 
 class ModelShowFieldSummary(BaseModel):
@@ -65,11 +65,11 @@ class ModelSummaryListOrder(BaseModel):
     field_b: int = 1
     field_a: int = 1
 
-    @validator("field_b")
+    @field_validator("field_b")
     def validate_b(cls, v):
         return v
 
-    @validator("field_a")
+    @field_validator("field_a")
     def validate_a(cls, v):
         return v
 
@@ -101,13 +101,14 @@ class ModelMembers(BaseModel):
 class ModelMemberOrder(BaseModel):
     """ModelMemberOrder."""
 
-    @validator("field")
+    @field_validator("field")
     def dummy(cls, v) -> str:
         """Check."""
         return v
 
     class Config:
         """Config."""
+
         allow_mutation = True
 
     field: int = 1
@@ -120,7 +121,7 @@ class ModelShowValidatorMembers(BaseModel):
     field: int = 1
     """Field."""
 
-    @validator("field")
+    @field_validator("field")
     def dummy(cls, v) -> str:
         """Check."""
         return v
@@ -134,6 +135,7 @@ class ModelShowConfigMember(BaseModel):
 
     class Config:
         """Config."""
+
         allow_mutation = True
 
 
@@ -149,7 +151,7 @@ class ModelWithFieldSwapNameAndAlias(BaseModel):
     field2: str = Field(default="FooBar", alias="field2 alias")
     """Field2"""
 
-    @validator("field1")
+    @field_validator("field1")
     def check(cls, v) -> str:
         """Check."""
         return v
@@ -172,7 +174,7 @@ class SettingsShowValidatorsSummary(BaseSettings):
 
     field: int = 1
 
-    @validator("field")
+    @field_validator("field")
     def check(cls, v) -> str:
         return v
 
@@ -192,11 +194,11 @@ class SettingsSummaryListOrder(BaseSettings):
     field_b: int = 1
     field_a: int = 1
 
-    @validator("field_b")
+    @field_validator("field_b")
     def validate_b(cls, v):
         return v
 
-    @validator("field_a")
+    @field_validator("field_a")
     def validate_a(cls, v):
         return v
 
@@ -228,13 +230,14 @@ class SettingsMembers(BaseSettings):
 class SettingsMemberOrder(BaseSettings):
     """SettingsMemberOrder."""
 
-    @validator("field")
+    @field_validator("field")
     def dummy(cls, v) -> str:
         """Check."""
         return v
 
     class Config:
         """Config."""
+
         allow_mutation = True
 
     field: int = 1
@@ -247,7 +250,7 @@ class SettingsShowValidatorMembers(BaseSettings):
     field: int = 1
     """Field."""
 
-    @validator("field")
+    @field_validator("field")
     def dummy(cls, v) -> str:
         """Check."""
         return v
@@ -261,6 +264,7 @@ class SettingsShowConfigMember(BaseSettings):
 
     class Config:
         """Config."""
+
         allow_mutation = True
 
 
@@ -289,7 +293,7 @@ class ValidatorReplaceSignature(BaseModel):
 
     field: int = 1
 
-    @validator("field")
+    @field_validator("field")
     def check(cls, v) -> str:
         """Check."""
         return v
@@ -301,7 +305,7 @@ class ValidatorReplaceSignatureWithSwapNameAndAlias(BaseModel):
     field1: int = Field(default=5, alias="field1 alias")
     """Field1"""
 
-    @validator("field1")
+    @field_validator("field1")
     def check(cls, v) -> str:
         """Check."""
         return v
@@ -312,7 +316,7 @@ class ValidatorListFields(BaseModel):
 
     field: int = 1
 
-    @validator("field")
+    @field_validator("field")
     def check(cls, v) -> str:
         """Check."""
         return v
@@ -323,7 +327,7 @@ class ValidatorListFieldsWithFieldSwapNameAndAlias(BaseModel):
 
     field: int = Field(1, alias="field_alias")
 
-    @validator("field")
+    @field_validator("field")
     def check(cls, v) -> str:
         """Check."""
         return v
@@ -334,7 +338,7 @@ class ValidatorSignaturePrefix(BaseModel):
 
     field: int = 1
 
-    @validator("field")
+    @field_validator("field")
     def check(cls, v) -> str:
         """Check."""
         return v
@@ -345,17 +349,17 @@ class ValidatorAsteriskRootValidator(BaseModel):
 
     field: int = 1
 
-    @validator("*")
+    @field_validator("*")
     def check(cls, v):
         """Check."""
         return v
 
-    @root_validator
+    @model_validator
     def check_root(cls, values):
         """Check root."""
         return values
 
-    @root_validator(pre=True)
+    @model_validator(pre=True)
     def check_root_pre(cls, values):
         """Check root pre."""
         return values
@@ -367,7 +371,7 @@ class FieldListValidators(BaseModel):
     field: int = 1
     """Field."""
 
-    @validator("field")
+    @field_validator("field")
     def check(cls, v) -> str:
         """Check."""
         return v
@@ -376,7 +380,7 @@ class FieldListValidators(BaseModel):
 class FieldListValidatorsInherited(FieldListValidators):
     """FieldListValidatorsInherited."""
 
-    @validator("field")
+    @field_validator("field")
     def check_inherited(cls, v) -> str:
         """Check inherited."""
         return v
@@ -490,4 +494,5 @@ class ModelErdanticFigureRelated(ModelShowFieldSummary):
 
 class ModelErdanticFigure(ModelShowFieldSummary):
     """ModelErdanticFigure."""
+
     related: ModelErdanticFigureRelated

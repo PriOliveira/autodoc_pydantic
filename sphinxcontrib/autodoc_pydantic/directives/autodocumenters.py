@@ -7,7 +7,8 @@ from typing import Any, Optional, Dict, List, Iterable, Callable, Set
 
 import sphinx
 from docutils.statemachine import StringList
-from pydantic import BaseSettings, BaseModel
+from pydantic import BaseModel
+from pydantic_settings import BaseSettings
 from sphinx.ext.autodoc import (
     MethodDocumenter,
     ClassDocumenter,

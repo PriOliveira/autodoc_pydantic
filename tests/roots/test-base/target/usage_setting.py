@@ -1,5 +1,5 @@
-from pydantic import BaseSettings, validator, Field
-
+from pydantic import  validator, Field
+from pydantic_settings import BaseSettings
 
 class ExampleSettings(BaseSettings):
     """Document your project settings very conveniently. Applies like wise
